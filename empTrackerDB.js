@@ -135,18 +135,51 @@ function addEmployee() {
                 name: "lastName"
             },
             {
-                type: "input",
+                type: "list",
                 message: "What is the employee's role?",
+                choices: ['Captain', 'Engineer', 'Pilot', 'Mechanic'],
                 name: "role"
             },
         ])
         .then(function(response) {
-            connection.query(`INSERT INTO employees SET ?`)
+            let roleID;
+            switch (response.role) {
+                case 'Captain':
+                    roleID = 1;
+                    break;
+                case 'Engineer':
+                    roleID = 2;
+                    break;
+                case 'Pilot':
+                    roleID = 3;
+                    break;
+                case 'Mechanic':
+                    roleID = 4;
+                    break;
+            }
+            connection.query(`INSERT INTO employees SET ?`, {
+                first_name: response.firstName,
+                last_name: response.lastName,
+                role_id: roleID,
+            })
         })
 }
 
 function removeEmployee() {
+    viewAllEmployees();
+    inquirer.prompt({
+            type: 'input',
+            message: 'Please select which employee you would like to move by entering the integer value of their unique id:',
+            name: 'id'
+        })
+        .then(function(response) {
+            connection.query(`DELETE FROM employees WHERE id = ${id}`, function(err2, res2) {
+                if (err2) throw err2;
+                console.log(`Success! We have removed the employee from the database. \n Here's the updated table: \n`)
+                viewAllEmployees();
 
+            })
+        })
 }
 
 function updateRole() {
