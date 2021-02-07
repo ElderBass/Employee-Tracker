@@ -1,5 +1,5 @@
 # Employee Tracker 
-An application for viewing and managing employees in a database.
+An application for viewing and managing employees in a database, created by Seth Zygarlicke.
 
 ### Links:
 
@@ -74,18 +74,17 @@ All the code for this application was compiled using VS Code.
 ## Contributing
 
     
-If you wish to contribute to the repository, here's what you need to know:
+If you wish to contribute to the repository, fork it to your machine from GItHub and do with it what you will. 
 
     
-
     
 ## Questions
 
     
-See more projects by this creator on GitHub:  https://github.com/ElderBass
+See more projects by this Seth on GitHub:  https://github.com/ElderBass
 
    
-For any questions, please email the creator at:
+For any questions, please email Seth at:
 
     zygster11@gmail.com
 

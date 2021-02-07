@@ -22,15 +22,13 @@ connection.connect(function(err) {
     console.log("connected as id " + connection.threadId);
     init();
 });
-/* Add departments, roles, employees
-View departments, roles, employees
-Update employee roles*/
+
 function init() {
     inquirer
         .prompt({
             type: 'list',
             message: 'What would you like to do?',
-            choices: ['View All Employees', 'View All Departments', 'View All Employee Roles', 'Add Employee', 'Remove Employee', 'Add Employee Role', 'Add Department', 'Update Employee Role', 'Exit'],
+            choices: ['View All Employees', 'View All Departments', 'View Employees by Department (with budget)', 'View All Employee Roles', 'Add Employee', 'Remove Employee', 'Add Employee Role', 'Remove Employee Role', 'Update Employee Role', 'Add Department', 'Remove Department', 'Exit'],
             name: 'start'
         })
         .then(function(response) {
@@ -40,6 +38,9 @@ function init() {
                     break;
                 case 'View All Departments':
                     viewDepartments();
+                    break;
+                case 'View Employees by Department (with budget)':
+                    viewByDepartment();
                     break;
                 case 'View All Employee Roles':
                     viewRoles();
@@ -53,8 +54,14 @@ function init() {
                 case 'Add Department':
                     addDepartment();
                     break;
+                case 'Remove Department':
+                    removeDepartment();
+                    break;
                 case 'Add Employee Role':
                     addRole();
+                    break;
+                case 'Remove Employee Role':
+                    removeRole();
                     break;
                 case 'Update Employee Role':
                     updateRole();
@@ -67,55 +74,13 @@ function init() {
 }
 
 function viewAllEmployees() {
-    connection.query(`SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title, role.salary, department.name FROM employees INNER JOIN role ON employees.role_id = role.r_id INNER JOIN department on role.department_id = department.d_id`, function(err, res) {
-            if (err) throw err
-            console.table(res);
-            console.log(`\n==================================\n`);
-            init();
-        })
-        /* // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
-  findAllEmployees() { ACTUAL::: SELECT employee.e_id, employee.first_name, employee.last_name, role.title FROM employees
-    return this.connection.query( 
-      "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
-    );
-  } */
-
+    connection.query(`SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title, role.salary, department.name FROM employees INNER JOIN role ON employees.role_id = role.r_id INNER JOIN department ON role.department_id = department.d_id`, function(err, res) {
+        if (err) throw err
+        console.table(res);
+        console.log(`\n==================================\n`);
+        init();
+    })
 }
-/*
-function viewByDepartment() {
-    inquirer
-        .prompt({
-            type: "list",
-            message: "Which department would you like to view?",
-            choices: ['Rocinante', 'Tycho Station', 'Martian Navy'],
-            name: "department",
-        })
-        .then(function(response) {
-            switch (response.department) {
-                case 'Rocinante':
-                    connection.query(`SELECT first_name, last_name FROM employees INNER JOIN role ON employees.role_id = role.id WHERE role.department_id = 1`, function(err, res) {
-                        if (err) throw err;
-                        console.log(`Employees on the Rocinate: \n`)
-                        console.table(res);
-                    })
-                    break;
-                case 'Tycho Station':
-                    connection.query(`SELECT first_name, last_name FROM employees INNER JOIN role ON employees.role_id = role.id WHERE role.department_id = 2`, function(err, res) {
-                        if (err) throw err;
-                        console.log(`Employees on Tycho Station: \n`)
-                        console.table(res);
-                    })
-                    break;
-                case 'Martian Navy':
-                    connection.query(`SELECT first_name, last_name FROM employees INNER JOIN role ON employees.role_id = role.id WHERE role.department_id = 3`, function(err, res) {
-                        if (err) throw err;
-                        console.log(`Employees in the Martian Navy: \n`)
-                        console.table(res);
-                    })
-                    break;
-            }
-        })
-} */
 
 function viewDepartments() {
     connection.query("SELECT name FROM department", function(err, res) {
@@ -124,6 +89,48 @@ function viewDepartments() {
         console.table(res);
         console.log(`\n==================================\n`)
         init();
+    })
+}
+
+function viewByDepartment() {
+
+    connection.query("SELECT name, d_id FROM department", function(err, res) {
+        if (err) throw err;
+
+        let depts = [];
+        for (let i = 0; i < res.length; i++) {
+            let dept = {
+                name: res[i].name,
+                value: {
+                    id: res[i].d_id,
+                    dept: res[i].name
+                }
+            }
+            depts.push(dept);
+        }
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which department would you like to view?",
+                choices: depts,
+                name: "department",
+            })
+            .then(function(response) {
+                connection.query(`SELECT employees.first_name, employees.last_name, role.title, role.salary FROM employees INNER JOIN role ON role.r_id = employees.role_id WHERE role.department_id = ${response.department.id}`, function(err, res) {
+                    if (err) throw err
+
+                    let budget = 0;
+                    for (let i = 0; i < res.length; i++) {
+                        budget += res[i].salary;
+                    }
+                    console.log(`\n Viewing Employees from Department: "${response.department.dept}"`);
+                    console.log(res);
+                    console.table(res);
+                    console.log(`Total Budget for Department "${response.department.dept}" \n ${budget.toFixed(2)} Credits`);
+                    console.log(`\n==================================\n`);
+                    init();
+                })
+            })
     })
 }
 
@@ -136,7 +143,7 @@ function viewRoles() {
         init();
     })
 }
-//this def needs work
+
 function addEmployee() {
     connection.query(`SELECT title, r_id FROM role`, function(err, res) {
         if (err) throw err;
@@ -186,19 +193,15 @@ function addEmployee() {
 function removeEmployee() {
     connection.query("SELECT first_name, last_name, e_id FROM employees", function(err, res) {
         if (err) throw err;
-        //set up an array that we will add our responses to
         let emps = [];
-        //for every response object we get back from the query...
         for (let i = 0; i < res.length; i++) {
-            //create a new object whose name is the employee's full name and value is the employee's id
             let emp = {
-                    name: res[i].first_name + " " + res[i].last_name,
-                    value: {
-                        id: res[i].e_id,
-                        emp: res[i].first_name + " " + res[i].last_name
-                    }
+                name: res[i].first_name + " " + res[i].last_name,
+                value: {
+                    id: res[i].e_id,
+                    emp: res[i].first_name + " " + res[i].last_name
                 }
-                //push this new object into the 'emps' array
+            }
             emps.push(emp);
         }
         inquirer.prompt({
@@ -273,6 +276,39 @@ function addRole() {
     })
 }
 
+function removeDepartment() {
+    connection.query("SELECT name, d_id FROM department", function(err, res) {
+        if (err) throw err;
+
+        let depts = [];
+        for (let i = 0; i < res.length; i++) {
+            let dept = {
+                name: res[i].name,
+                value: {
+                    id: res[i].d_id,
+                    dept: res[i].name
+                }
+            }
+            depts.push(dept);
+        }
+        inquirer.prompt({
+                type: 'list',
+                message: 'Which role which would like to remove?',
+                choices: depts, //this is now an array of objects, each of which has a value equal to the employee's id
+                name: "role"
+            })
+            .then(function(response) {
+                //then we delete the employee who's id matches the value of the choice the user maade in the prompt
+                connection.query(`DELETE FROM department WHERE department.d_id = ${response.department.id}`, function(err2, res2) {
+                    if (err2) throw err2;
+                    console.log(`Success! We have removed ${response.department.dept} from the database. \n `)
+                    console.log(`\n==================================\n`);
+                    init();
+                })
+            })
+    })
+}
+
 function addDepartment() {
     inquirer
         .prompt({
@@ -290,8 +326,41 @@ function addDepartment() {
         })
 }
 
+function removeDepartment() {
+    connection.query("SELECT name, d_id FROM department", function(err, res) {
+        if (err) throw err;
+
+        let depts = [];
+        for (let i = 0; i < res.length; i++) {
+            let dept = {
+                name: res[i].name,
+                value: {
+                    id: res[i].d_id,
+                    dept: res[i].name
+                }
+            }
+            depts.push(dept);
+        }
+        inquirer.prompt({
+                type: 'list',
+                message: 'Which department which would like to remove?',
+                choices: depts, //this is now an array of objects, each of which has a value equal to the employee's id
+                name: "department"
+            })
+            .then(function(response) {
+                //then we delete the employee who's id matches the value of the choice the user maade in the prompt
+                connection.query(`DELETE FROM department WHERE department.d_id = ${response.department.id}`, function(err2, res2) {
+                    if (err2) throw err2;
+                    console.log(`Success! We have removed ${response.department.dept} from the database. \n `)
+                    console.log(`\n==================================\n`);
+                    init();
+                })
+            })
+    })
+}
+
 function updateRole() {
-    connection.query("SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title FROM employees INNER JOIN role ON employees.role_id = role.r_id", function(err, res) {
+    connection.query("SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title FROM employees RIGHT JOIN role ON employees.role_id = role.r_id", function(err, res) {
         if (err) throw err;
 
         let emps = [];
@@ -307,9 +376,10 @@ function updateRole() {
             emps.push(emp);
 
             let role = {
-                name: res[i].title,
-                value: res[i].r_id
-            }
+                    name: res[i].title,
+                    value: res[i].r_id
+                }
+                //this adds 'Mechanic' three times to the list of roles and I don't know why. Something wrong my join I think. I didn't have time to fix it unfortunately.
             roles.push(role);
         }
         inquirer
@@ -325,7 +395,7 @@ function updateRole() {
                 name: 'role'
             }])
             .then(function(response) {
-                console.log(response.role)
+
                 connection.query(`
                             UPDATE employees SET ? WHERE ? `, [{
                         role_id: response.role
@@ -335,7 +405,7 @@ function updateRole() {
                     }
                 ], function(err3, res3) {
                     if (err3) err3;
-                    console.log(`Success!We 've updated the role for this employee.`)
+                    console.log(`Success!We've updated the role for this employee.`)
                     console.log(`\n==================================\n`);
                     init();
                 })
