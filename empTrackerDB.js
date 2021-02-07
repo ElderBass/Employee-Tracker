@@ -289,7 +289,7 @@ function addDepartment() {
 function updateRole() {
     connection.query("SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title FROM employees INNER JOIN role ON employees.role_id = role.r_id", function(err, res) {
         if (err) throw err;
-        console.log(res);
+        
         let emps = [];
         let roles = [];
         for (let i = 0; i < res.length; i++) {

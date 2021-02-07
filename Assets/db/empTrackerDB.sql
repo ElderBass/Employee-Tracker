@@ -37,8 +37,8 @@ VALUES ("Rocinante"), ("Tycho Station"), ("Martian Navy");
 
 
 UPDATE role 
-SET  department_id = 1
-WHERE r_id = 4;
+SET  manager_id = 2
+WHERE e_id = 8;
 
 DELETE FROM role
 WHERE r_id = 7;
