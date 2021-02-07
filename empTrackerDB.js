@@ -67,7 +67,7 @@ function init() {
 }
 
 function viewAllEmployees() {
-    connection.query(`SELECT * FROM employees`, function(err, res) {
+    connection.query(`SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title, role.salary, department.name FROM employees INNER JOIN role ON employees.role_id = role.r_id INNER JOIN department on role.department_id = department.d_id`, function(err, res) {
             if (err) throw err
             console.table(res);
             console.log(`\n==================================\n`);
@@ -75,8 +75,8 @@ function viewAllEmployees() {
             init();
         })
         /* // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
-  findAllEmployees() {
-    return this.connection.query(
+  findAllEmployees() { ACTUAL::: SELECT employee.e_id, employee.first_name, employee.last_name, role.title FROM employees
+    return this.connection.query( 
       "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
     );
   } */
@@ -226,6 +226,21 @@ function removeEmployee() {
     })
 }
 
+function viewByManager() {
+    connection.query("SELECT * FROM department", function(err, res) {
+        if (err) throw err;
+
+        let depts = [];
+        for (let i = 0; i < res.length; i++) {
+            let dept = {
+                name: res[i].name,
+                value: res[i].d_id
+            }
+            depts.push(dept);
+        }
+    })
+}
+
 function addRole() {
     //just need to grab the department names and their ids so we can display them in a prompt and set the department_id of the role to the d_id
     connection.query("SELECT * FROM department", function(err, res) {
@@ -289,7 +304,7 @@ function addDepartment() {
 function updateRole() {
     connection.query("SELECT employees.first_name, employees.last_name, employees.e_id, employees.role_id, role.r_id, role.title FROM employees INNER JOIN role ON employees.role_id = role.r_id", function(err, res) {
         if (err) throw err;
-        
+
         let emps = [];
         let roles = [];
         for (let i = 0; i < res.length; i++) {
