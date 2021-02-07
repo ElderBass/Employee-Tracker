@@ -85,7 +85,7 @@ function viewAllEmployees() {
 function viewRoles() {
     connection.query(`SELECT title, salary, department_id FROM role`, function(err, res) {
         if (err) throw err;
-        console.log("Viewing All Employee Roles:")
+        console.log(`\nViewing All Employee Roles:`)
         console.table(res);
         console.log(`\n==================================\n`)
         init();
@@ -95,7 +95,7 @@ function viewRoles() {
 function viewDepartments() {
     connection.query("SELECT name FROM department", function(err, res) {
         if (err) throw err;
-        console.log("Viewing All Departments:")
+        console.log(`\nViewing All Departments:`)
         console.table(res);
         console.log(`\n==================================\n`)
         init();
@@ -134,7 +134,6 @@ function viewByDepartment() {
                         budget += res[i].salary;
                     }
                     console.log(`\n Viewing Employees from Department: "${response.department.dept}"`);
-                    console.log(res);
                     console.table(res);
                     console.log(`Total Budget for Department "${response.department.dept}" \n ${budget.toFixed(2)} Credits`);
                     console.log(`\n==================================\n`);
@@ -182,7 +181,7 @@ function addEmployee() {
                     },
                     function(err, res) {
                         if (err) throw err;
-                        console.log(`Great! We've added ${response.firstName} ${response.lastName} to the database of employees!`)
+                        console.log(`\nGreat! We've added ${response.firstName} ${response.lastName} to the database of employees!`)
                         console.log(`\n==================================\n`);
                         init();
                     })
@@ -212,9 +211,9 @@ function removeEmployee() {
             })
             .then(function(response) {
                 //then we delete the employee who's id matches the value of the choice the user maade in the prompt
-                connection.query(`DELETE FROM employees WHERE employees.e_id = ${response.employee.e_id}`, function(err2, res2) {
+                connection.query(`DELETE FROM employees WHERE employees.e_id = ${response.employee.id}`, function(err2, res2) {
                     if (err2) throw err2;
-                    console.log(`Success! We have removed ${response.employee.emp} from the database. \n `)
+                    console.log(`\nSuccess! We have removed ${response.employee.emp} from the database. \n `)
                     console.log(`\n==================================\n`);
                     init();
                 })
@@ -253,7 +252,7 @@ function addRole() {
             .then(function(response) {
                 connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${response.role}", "${parseInt(response.salary).toFixed(2)}", "${response.department}")`, function(err2, res2) {
                     if (err2) throw err2;
-                    console.log(`Heck yeah! We successfully added ${response.role} to the database! \n`)
+                    console.log(`\nHeck yeah! We successfully added ${response.role} to the database! \n`)
                     console.log(`\n==================================\n`);
                     init();
                 })
@@ -336,7 +335,7 @@ function removeDepartment() {
                 //then we delete the employee who's id matches the value of the choice the user maade in the prompt
                 connection.query(`DELETE FROM department WHERE department.d_id = ${response.department.id}`, function(err2, res2) {
                     if (err2) throw err2;
-                    console.log(`Success! We have removed ${response.department.dept} from the database. \n `)
+                    console.log(`\nSuccess! We have removed ${response.department.dept} from the database. \n `)
                     console.log(`\n==================================\n`);
                     init();
                 })
@@ -361,10 +360,9 @@ function updateRole() {
             emps.push(emp);
 
             let role = {
-                    name: res[i].title,
-                    value: res[i].r_id
-                }
-                //this adds 'Mechanic' three times to the list of roles and I don't know why. Something wrong my join I think. I didn't have time to fix it unfortunately.
+                name: res[i].title,
+                value: res[i].r_id
+            }
             roles.push(role);
         }
         inquirer
@@ -390,7 +388,7 @@ function updateRole() {
                     }
                 ], function(err3, res3) {
                     if (err3) err3;
-                    console.log(`Success!We've updated the role for this employee.`)
+                    console.log(`\nSuccess! We've updated the role for this employee.`)
                     console.log(`\n==================================\n`);
                     init();
                 })

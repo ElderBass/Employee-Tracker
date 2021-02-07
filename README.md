@@ -5,7 +5,7 @@ An application for viewing and managing employees in a database, created by Seth
 
 GitHub Repository: https://github.com/ElderBass/Employee-Tracker.git
     
-
+Video Demonstration: https://drive.google.com/file/d/1aFBkR8vRe2H_WomYfPcFeEqTZpy4FPaR/view
 
     
 ## Table of Contents
@@ -49,6 +49,9 @@ Using these prompts, the manager can do the following tasks:
 The manager can perform all of these actions seemlessly using inquirer prompts. As soon as one action is performed successfully, the manager will be returned to the 'main menu' of prompts, where they can continue performing actions as much as they want.
 
 To exit the application, one simply must choose 'Exit' from the main menu. 
+
+__Demonstration__: https://drive.google.com/file/d/1aFBkR8vRe2H_WomYfPcFeEqTZpy4FPaR/view
+
 
 ### Disclaimers and Future Directions
 -----------------------------
