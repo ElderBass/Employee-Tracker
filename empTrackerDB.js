@@ -82,6 +82,16 @@ function viewAllEmployees() {
     })
 }
 
+function viewRoles() {
+    connection.query(`SELECT title, salary, department_id FROM role`, function(err, res) {
+        if (err) throw err;
+        console.log("Viewing All Employee Roles:")
+        console.table(res);
+        console.log(`\n==================================\n`)
+        init();
+    })
+}
+
 function viewDepartments() {
     connection.query("SELECT name FROM department", function(err, res) {
         if (err) throw err;
@@ -131,16 +141,6 @@ function viewByDepartment() {
                     init();
                 })
             })
-    })
-}
-
-function viewRoles() {
-    connection.query(`SELECT title, salary, department_id FROM role`, function(err, res) {
-        if (err) throw err;
-        console.log("Viewing All Employee Roles:")
-        console.table(res);
-        console.log(`\n==================================\n`)
-        init();
     })
 }
 
@@ -221,21 +221,6 @@ function removeEmployee() {
             })
     })
 }
-
-/*function viewByManager() {
-    connection.query("SELECT * FROM department", function(err, res) {
-        if (err) throw err;
-
-        let depts = [];
-        for (let i = 0; i < res.length; i++) {
-            let dept = {
-                name: res[i].name,
-                value: res[i].d_id
-            }
-            depts.push(dept);
-        }
-    })
-} */
 
 function addRole() {
     //just need to grab the department names and their ids so we can display them in a prompt and set the department_id of the role to the d_id

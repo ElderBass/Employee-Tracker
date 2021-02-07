@@ -1,139 +1,110 @@
-# Unit 12 MySQL Homework: Employee Tracker
+# Employee Tracker 
+An application for viewing and managing employees in a database, created by Seth Zygarlicke.
 
-Developers are often tasked with creating interfaces that make it easy for non-developers to view and interact with information stored in databases. Often these interfaces are known as **C**ontent **M**anagement **S**ystems. In this homework assignment, your challenge is to architect and build a solution for managing a company's employees using node, inquirer, and MySQL.
+### Links:
 
-## Instructions
+GitHub Repository: https://github.com/ElderBass/Employee-Tracker.git
+    
 
-Design the following database schema containing three tables:
 
-![Database Schema](Assets/schema.png)
+    
+## Table of Contents
 
-* **department**:
+* [Description](#description)
 
-  * **id** - INT PRIMARY KEY
-  * **name** - VARCHAR(30) to hold department name
 
-* **role**:
+* [Installation](#installation)
 
-  * **id** - INT PRIMARY KEY
-  * **title** -  VARCHAR(30) to hold role title
-  * **salary** -  DECIMAL to hold role salary
-  * **department_id** -  INT to hold reference to department role belongs to
+    
+* [Usage](#usage)
 
-* **employee**:
+    
+* [Contributing](#contributing)
 
-  * **id** - INT PRIMARY KEY
-  * **first_name** - VARCHAR(30) to hold employee first name
-  * **last_name** - VARCHAR(30) to hold employee last name
-  * **role_id** - INT to hold reference to role employee has
-  * **manager_id** - INT to hold reference to another employee that manages the employee being Created. This field may be null if the employee has no manager
-  
-Build a command-line application that at a minimum allows the user to:
+    
+* [Tests](#tests)
 
-  * Add departments, roles, employees
+    
+* [Questions](#questions)
 
-  * View departments, roles, employees
 
-  * Update employee roles
 
-Bonus points if you're able to:
 
-  * Update employee managers
+    
+## Description
 
-  * View employees by manager
+Employee Tracker is a node.js application that allows a manager to access a database of all the employees within a company. When the application is run, the user is prompted with a list of options for viewing and updating the employees. 
 
-  * Delete departments, roles, and employees
+Using these prompts, the manager can do the following tasks:
 
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
+* View All Employees in the database
+* View All Departments
+* View All Employee Roles
+* View Employees by Department (including the total budget for that department)
+* Add/Remove Employees
+* Add/Remove Employee Roles
+* Update an Employee's Role
+* Add/Remove Departments
 
-We can frame this challenge as follows:
+The manager can perform all of these actions seemlessly using inquirer prompts. As soon as one action is performed successfully, the manager will be returned to the 'main menu' of prompts, where they can continue performing actions as much as they want.
+
+To exit the application, one simply must choose 'Exit' from the main menu. 
+
+### Disclaimers and Future Directions
+-----------------------------
+
+I did not have enough time to clean up the code in this repository, thus many of the functions are inefficient, however they all should work perfectly. 
+
+The way I set up this application was for a fictional universe of characters, thus the 'manager' functionality is limited and not what the assignment had intended. In the future, I believe I could find a way to 'Update Employee Managers' and 'View Employees by Manager'. 
+
+
+    
+## Installation
+
+    
+This application relies on two main dependencies: mysql and inquirer. To install these packages on your machine, run the following commands:
 
 ```
-As a business owner
-I want to be able to view and manage the departments, roles, and employees in my company
-So that I can organize and plan my business
+npm i mysql  | npm i inquirer
 ```
 
-How do you deliver this? Here are some guidelines:
+In order to run this application, right click on the 'empTrackerDB.js' file and select 'Open in Integrated Terminal'. In the new terminal that pops up on your window, type the following command:
 
-* Use the [MySQL](https://www.npmjs.com/package/mysql) NPM package to connect to your MySQL database and perform queries.
+```
+node empTrackerDB.js
+```
 
-* Use [InquirerJs](https://www.npmjs.com/package/inquirer/v/0.2.3) NPM package to interact with the user via the command-line.
+You will then be taken to main menu of the Employee Tracker app. 
+    
+    
+## Technologies
 
-* Use [console.table](https://www.npmjs.com/package/console.table) to print MySQL rows to the console. There is a built-in version of `console.table`, but the NPM package formats the data a little better for our purposes.
+This is a node application using javascript/JSON for backend functionality. The database was built and stored using MySQL Workbench, and the application itself uses the 'mysql' npm package to connect the javascript with the SQL database. 
 
-* You may wish to have a separate file containing functions for performing specific SQL queries you'll need to use. Could a constructor function or a class be helpful for organizing these?
+The prompts for navigating and utilizing the application were set up with the 'inquirer' npm package. 
 
-* You will need to perform a variety of SQL JOINS to complete this assignment, and it's recommended you review the week's activities if you need a refresher on this.
-
-![Employee Tracker](Assets/employee-tracker.gif)
-
-### Hints
-
-* You may wish to include a `seed.sql` file to pre-populate your database. This will make development of individual features much easier.
-
-* Focus on getting the basic functionality completed before working on more advanced features.
-
-* Review the week's activities for a refresher on MySQL.
-
-* Check out [SQL Bolt](https://sqlbolt.com/) for some extra MySQL help.
-
-## Minimum Requirements
-
-* Functional application.
-
-* GitHub repository with a unique name and a README describing the project.
-
-* The command-line application should allow users to:
-
-  * Add departments, roles, employees
-
-  * View departments, roles, employees
-
-  * Update employee roles
-
-## Bonus
-
-* The command-line application should allow users to:
-
-  * Update employee managers
-
-  * View employees by manager
-
-  * Delete departments, roles, and employees
-
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
-
-## Commit Early and Often
-
-One of the most important skills to master as a web developer is version control. Building the habit of committing via Git is important for two reasons:
-
-* Your commit history is a signal to employers that you are actively working on projects and learning new skills.
-
-* Your commit history allows you to revert your codebase in the event that you need to return to a previous state.
-
-Follow these guidelines for committing:
-
-* Make single-purpose commits for related changes to ensure a clean, manageable history. If you are fixing two issues, make two commits.
-
-* Write descriptive, meaningful commit messages so that you and anyone else looking at your repository can easily understand its history.
-
-* Don't commit half-done work, for the sake of your collaborators (and your future self!).
-
-* Test your application before you commit to ensure functionality at every step in the development process.
-
-We would like you to have well over 200 commits by graduation, so commit early and often!
-
-**Important**: You will be committing a file that contains your database credentials. Make sure your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. In upcoming lessons, you will learn how to better secure this password, or you can start researching npm packages now that could help you.
+All the code for this application was compiled using VS Code. 
 
 
-## Submission on BCS
+    
+## Contributing
 
-You are required to submit the following:
+    
+If you wish to contribute to the repository, fork it to your machine from GItHub and do with it what you will. 
 
-* The URL of the GitHub repository
+    
+    
+## Questions
 
-* A video demonstrating the entirety of the app's functionality 
+    
+See more projects by this Seth on GitHub:  https://github.com/ElderBass
 
-- - -
-© 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
+   
+For any questions, please email Seth at:
+
+    zygster11@gmail.com
+
+
+    
+
+    
