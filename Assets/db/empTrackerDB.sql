@@ -33,15 +33,15 @@ VALUES ("Captain", 300000.00), ("Engineer", 200000.00), ("Pilot", 200000.00), ("
 select * from role;
 
 INSERT INTO role (title, salary, department_id)
-VALUES ("Botanist", 150000.00, 1);
+VALUES ("Detective", 50000.00, 4);
 
 INSERT INTO department (name)
 VALUES ("Rocinante"), ("Tycho Station"), ("Martian Navy");
 
 
-UPDATE employees 
-SET  first_name = "Fred"
-WHERE e_id = 8;
+UPDATE role 
+SET  department_id = 2
+WHERE r_id = 11;
 
 DELETE FROM role
 WHERE r_id = 7;

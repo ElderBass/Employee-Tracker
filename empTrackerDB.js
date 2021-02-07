@@ -222,7 +222,7 @@ function removeEmployee() {
     })
 }
 
-function viewByManager() {
+/*function viewByManager() {
     connection.query("SELECT * FROM department", function(err, res) {
         if (err) throw err;
 
@@ -235,7 +235,7 @@ function viewByManager() {
             depts.push(dept);
         }
     })
-}
+} */
 
 function addRole() {
     //just need to grab the department names and their ids so we can display them in a prompt and set the department_id of the role to the d_id
@@ -276,32 +276,32 @@ function addRole() {
     })
 }
 
-function removeDepartment() {
-    connection.query("SELECT name, d_id FROM department", function(err, res) {
+function removeRole() {
+    connection.query("SELECT title, r_id FROM role", function(err, res) {
         if (err) throw err;
 
-        let depts = [];
+        let roles = [];
         for (let i = 0; i < res.length; i++) {
-            let dept = {
-                name: res[i].name,
+            let role = {
+                name: res[i].title,
                 value: {
-                    id: res[i].d_id,
-                    dept: res[i].name
+                    id: res[i].r_id,
+                    role: res[i].title
                 }
             }
-            depts.push(dept);
+            roles.push(role);
         }
         inquirer.prompt({
                 type: 'list',
                 message: 'Which role which would like to remove?',
-                choices: depts, //this is now an array of objects, each of which has a value equal to the employee's id
+                choices: roles,
                 name: "role"
             })
             .then(function(response) {
                 //then we delete the employee who's id matches the value of the choice the user maade in the prompt
-                connection.query(`DELETE FROM department WHERE department.d_id = ${response.department.id}`, function(err2, res2) {
+                connection.query(`DELETE FROM role WHERE role.r_id = ${response.role.id}`, function(err2, res2) {
                     if (err2) throw err2;
-                    console.log(`Success! We have removed ${response.department.dept} from the database. \n `)
+                    console.log(`\n Success! We have removed "${response.role.role}" from the database. \n `)
                     console.log(`\n==================================\n`);
                     init();
                 })
