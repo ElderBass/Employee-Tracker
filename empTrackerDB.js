@@ -71,7 +71,6 @@ function viewAllEmployees() {
             if (err) throw err
             console.table(res);
             console.log(`\n==================================\n`);
-            connection.end();
             init();
         })
         /* // Find all employees, join with roles and departments to display their roles, salaries, departments, and managers
@@ -124,7 +123,6 @@ function viewDepartments() {
         console.log("Viewing All Departments:")
         console.table(res);
         console.log(`\n==================================\n`)
-        connection.end();
         init();
     })
 }
@@ -135,7 +133,6 @@ function viewRoles() {
         console.log("Viewing All Employee Roles:")
         console.table(res);
         console.log(`\n==================================\n`)
-        connection.end();
         init();
     })
 }
@@ -179,9 +176,7 @@ function addEmployee() {
                     function(err, res) {
                         if (err) throw err;
                         console.log(`Great! We've added ${response.firstName} ${response.lastName} to the database of employees!`)
-                        viewAllEmployees();
                         console.log(`\n==================================\n`);
-                        connection.end();
                         init();
                     })
             })
@@ -216,10 +211,8 @@ function removeEmployee() {
                 //then we delete the employee who's id matches the value of the choice the user maade in the prompt
                 connection.query(`DELETE FROM employees WHERE employees.e_id = ${response.employee.e_id}`, function(err2, res2) {
                     if (err2) throw err2;
-                    console.log(`Success! We have removed ${response.employee.emp} from the database. \n Here's the updated table: `)
-                    viewAllEmployees();
+                    console.log(`Success! We have removed ${response.employee.emp} from the database. \n `)
                     console.log(`\n==================================\n`);
-                    connection.end();
                     init();
                 })
             })
@@ -272,10 +265,8 @@ function addRole() {
             .then(function(response) {
                 connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${response.role}", "${parseInt(response.salary).toFixed(2)}", "${response.department}")`, function(err2, res2) {
                     if (err2) throw err2;
-                    console.log(`Heck yeah! We successfully added ${response.role} to the database! Here's your updated table. Here's proof: \n`)
-                    viewRoles();
+                    console.log(`Heck yeah! We successfully added ${response.role} to the database! \n`)
                     console.log(`\n==================================\n`);
-                    connection.end();
                     init();
                 })
             })
@@ -292,10 +283,8 @@ function addDepartment() {
         .then(function(response) {
             connection.query(`INSERT INTO department (name) VALUES ("${response.department}")`, function(err, res) {
                 if (err) throw err;
-                console.log(`Excelsior! We successfully added this department to the database! Here's proof: \n`);
-                viewDepartments();
+                console.log(`Excelsior! We successfully added '${response.department}' to the database! \n`);
                 console.log(`\n==================================\n`);
-                connection.end();
                 init();
             })
         })
@@ -347,9 +336,7 @@ function updateRole() {
                 ], function(err3, res3) {
                     if (err3) err3;
                     console.log(`Success!We 've updated the role for this employee.`)
-                    viewAllEmployees();
                     console.log(`\n==================================\n`);
-                    connection.end();
                     init();
                 })
             })
@@ -357,5 +344,6 @@ function updateRole() {
 }
 
 function exitProgram() {
+    console.log("Thank for you using Employee Tracker. Have a nice day!")
     connection.end();
 }

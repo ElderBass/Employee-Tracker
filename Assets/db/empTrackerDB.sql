@@ -30,14 +30,17 @@ VALUES ("James", "Holden", 1), ("Naomi", "Nagata", 2), ("Alex", "Kamal", 3), ("A
 
 INSERT INTO role (title, salary)
 VALUES ("Captain", 300000.00), ("Engineer", 200000.00), ("Pilot", 200000.00), ("Mechanic", 180000.00); 
-select * from role;
+select * from employees;
+
+INSERT INTO role (title, salary)
+VALUES ("News Correspondent", 100000.00);
 
 INSERT INTO department (name)
 VALUES ("Rocinante"), ("Tycho Station"), ("Martian Navy");
 
 
-UPDATE role 
-SET  manager_id = 2
+UPDATE employees 
+SET  first_name = "Chrisjen"
 WHERE e_id = 8;
 
 DELETE FROM role
